@@ -6,7 +6,10 @@ DIR = $(NAME)
 TARGET = libipasir$(NAME).a
 
 CC = g++
+EXTRA_DEBUG_CFLAGS = -std=c++17 -g -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -O0
+DEBUG_CFLAGS = -std=c++17 -g -O0
 CFLAGS = -std=c++17 -DNDEBUG -O3
+CFLAGS = $(DEBUG_CFLAGS)
 
 all: $(TARGET)
 
@@ -31,9 +34,8 @@ build:
 	rm -f *.o
 
 test:
-	$(CC) -g test.cpp $(SRC_CPP) -o test.out
+	$(CC) $(DEBUG_CFLAGS) test.cpp $(SRC_CPP) -o test.out
 	./test.out
-	rm test.out
 
 .FORCE:
 .PHONY: all clean extract build pack test
