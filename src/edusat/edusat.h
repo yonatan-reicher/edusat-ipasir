@@ -188,7 +188,7 @@ public:
 	}
 };
 
-class Solver {
+struct Solver {
 	vector<Clause> cnf; // clause DB. 
 	vector<int> unaries; 
 	trail_t trail;  // assignment stack	
@@ -344,3 +344,4 @@ public:
 };
 
 
+extern Solver S;
