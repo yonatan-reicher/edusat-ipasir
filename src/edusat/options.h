@@ -31,3 +31,29 @@ public:	doubleoption(double* p, double _lb, double _ub, string _msg) : option(_m
 };
 void Abort(string s, int i);
 void parse_options(int argc, char** argv);
+
+enum class VAR_DEC_HEURISTIC {
+    MINISAT
+    // add other decision heuristics here. Add an option to choose between them.
+ } ;
+
+// Heuristics for choosing values for variables when faced with a decision.
+enum class VAL_DEC_HEURISTIC {
+    /* Same as last value. Initially false*/
+    PHASESAVING, 
+    /* Choose literal with highest frequency */
+    LITSCORE 
+};
+
+enum class MODE: int {
+    NORMAL = 0,
+    INCREMENTAL = 1,
+};
+
+
+extern int verbose;
+extern double begin_time;
+extern double timeout;
+extern VAR_DEC_HEURISTIC VarDecHeuristic;
+extern VAL_DEC_HEURISTIC ValDecHeuristic;
+extern MODE mode;

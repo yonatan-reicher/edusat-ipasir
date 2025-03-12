@@ -54,6 +54,20 @@ void help() {
 	Abort(st.str(), 3);
 }
 
+int verbose = 0;
+double begin_time;
+double timeout = 0.0;
+VAR_DEC_HEURISTIC VarDecHeuristic = VAR_DEC_HEURISTIC::MINISAT;
+VAL_DEC_HEURISTIC ValDecHeuristic = VAL_DEC_HEURISTIC::PHASESAVING;
+MODE mode = MODE::INCREMENTAL;
+
+unordered_map<string, option*> options = {
+    {"v",           new intoption(&verbose, 0, 2, "Verbosity level")},
+    {"timeout",     new doubleoption(&timeout, 0.0, 36000.0, "Timeout in seconds")},
+    {"valdh",       new intoption((int*)&ValDecHeuristic, 0, 1, "{0: phase-saving, 1: literal-score}")},
+    {"mode",        new intoption((int*)&mode, 0, 1, "{0: normal, 1: incremental}") }
+};
+
 void parse_options(int argc, char** argv) {
 	if (argc % 2 == 1 || string(argv[1]).compare("-h") == 0)
 		help();

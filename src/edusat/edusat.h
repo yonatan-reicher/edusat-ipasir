@@ -30,36 +30,7 @@ typedef vector<Lit> trail_t;
 #define Rescale_threshold 1e100
 #define Assignment_file "assignment.txt"
 
-int verbose = 0;
-double begin_time;
-double timeout = 0.0;
-
-
 void Abort(string s, int i);
-
-enum class VAR_DEC_HEURISTIC {
-	MINISAT
-	// add other decision heuristics here. Add an option to choose between them.
- } ;
-
-VAR_DEC_HEURISTIC VarDecHeuristic = VAR_DEC_HEURISTIC::MINISAT;
-
-enum class VAL_DEC_HEURISTIC {
-	/* Same as last value. Initially false*/
-	PHASESAVING, 
-	/* Choose literal with highest frequency */
-	LITSCORE 
-} ;
-
-VAL_DEC_HEURISTIC ValDecHeuristic = VAL_DEC_HEURISTIC::PHASESAVING;
-
-
-unordered_map<string, option*> options = {
-	{"v",           new intoption(&verbose, 0, 2, "Verbosity level")},
-	{"timeout",     new doubleoption(&timeout, 0.0, 36000.0, "Timeout in seconds")},
-	{"valdh",       new intoption((int*)&ValDecHeuristic, 0, 1, "{0: phase-saving, 1: literal-score}")}
-};
-
 
 enum class LitState {
 	L_UNSAT,
@@ -95,7 +66,7 @@ static inline double cpuTime(void) {
     return (double)clock() / CLOCKS_PER_SEC; }
 
 // For production wrap with #ifdef _DEBUG
-void AssertCheck(bool cond, string func_name, int line, string msg = "") {
+inline void AssertCheck(bool cond, string func_name, int line, string msg = "") {
 	if (cond) return;
 	cout << "Assertion fail" << endl;
 	cout << msg << endl;
@@ -104,33 +75,33 @@ void AssertCheck(bool cond, string func_name, int line, string msg = "") {
 }
 
 
-bool match(ifstream& in, char* str) {
+inline bool match(ifstream& in, char* str) {
     for (; *str != '\0'; ++str)
         if (*str != in.get())
             return false;
     return true;
 }
 
-unsigned int Abs(int x) { // because the result is compared to an unsigned int. unsigned int are introduced by size() functions, that return size_t, which is defined to be unsigned. 
+inline unsigned int Abs(int x) { // because the result is compared to an unsigned int. unsigned int are introduced by size() functions, that return size_t, which is defined to be unsigned. 
 	if (x < 0) return (unsigned int)-x;
 	else return (unsigned int)x;
 }
 
-unsigned int v2l(int i) { // maps a literal as it appears in the cnf to literal
+inline unsigned int v2l(int i) { // maps a literal as it appears in the cnf to literal
 	if (i < 0) return ((-i) << 1) - 1; 
 	else return i << 1;
 } 
 
-Var l2v(Lit l) {
+inline Var l2v(Lit l) {
 	return (l+1) / 2;	
 } 
 
-Lit negate_(Lit l) {
+inline Lit negate_(Lit l) {
 	if (Neg(l)) return l + 1;  // odd
 	return l - 1;		
 }
 
-int l2rl(int l) {
+inline int l2rl(int l) {
 	return Neg(l)? -((l + 1) / 2) : l / 2;
 }
 
