@@ -261,16 +261,16 @@ struct Solver {
 	SolverState BCP();
 	int  analyze(const Clause);
 	inline int  getVal(Var v);
-	inline void add_clause(Clause& c, int l, int r);
-	inline void add_unary_clause(Lit l);
-	inline void assert_lit(Lit l);	
+	void add_clause(Clause& c, int l, int r);
+	void add_unary_clause(Lit l);
+	void assert_lit(Lit l);	
 	void m_rescaleScores(double& new_score);
 	inline void backtrack(int k);
 	void restart();
 	
 	// scores	
-	inline void bumpVarScore(int idx);
-	inline void bumpLitScore(int lit_idx);
+	void bumpVarScore(int idx);
+	void bumpLitScore(int lit_idx);
 
 public:
 	Solver(): 

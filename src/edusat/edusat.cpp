@@ -113,7 +113,7 @@ void Solver::reset() { // invoked initially + every restart
 }
 
 
-inline void Solver::reset_iterators(double where) {
+void Solver::reset_iterators(double where) {
 	m_Score2Vars_it = (where == 0) ? m_Score2Vars.begin() : m_Score2Vars.lower_bound(where);
 	Assert(m_Score2Vars_it != m_Score2Vars.end());
 	m_VarsSameScore_it = m_Score2Vars_it->second.begin();
@@ -144,7 +144,7 @@ void Solver::initialize() {
 	reset();
 }
 
-inline void Solver::assert_lit(Lit l) {
+void Solver::assert_lit(Lit l) {
 	trail.push_back(l);
 	int var = l2v(l);
 	if (Neg(l)) prev_state[var] = state[var] = VarState::V_FALSE; else prev_state[var] = state[var] = VarState::V_TRUE;
