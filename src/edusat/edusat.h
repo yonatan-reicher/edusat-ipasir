@@ -1,14 +1,11 @@
 #pragma once
 #include <iostream>
-#include <algorithm>
 #include <iterator>
 #include <vector>
 #include <unordered_set>
 #include <unordered_map>
 #include <map>
-#include <set>
 #include <string>
-#include <sstream>  
 #include <fstream>
 #include <cassert>
 #include <ctime>

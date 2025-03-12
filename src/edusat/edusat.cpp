@@ -1,4 +1,7 @@
 #include "edusat.h"
+#include <algorithm>
+#include <set>
+#include <sstream>
 
 
 Solver S;
