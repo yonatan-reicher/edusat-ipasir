@@ -604,20 +604,3 @@ SolverState Solver::_solve() {
 }
 
 #pragma endregion solving
-
-
-/******************  main ******************************/
-
-int main(int argc, char** argv){
-	begin_time = cpuTime();
-	parse_options(argc, argv);
-	
-	ifstream in (argv[argc - 1]);
-	if (!in.good()) Abort("cannot read input file", 1);	
-	cout << "This is edusat" << endl;
-	S.read_cnf(in);		
-	in.close();
-	S.solve();	
-
-	return 0;
-}
