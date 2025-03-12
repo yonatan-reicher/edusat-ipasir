@@ -61,11 +61,15 @@ VAR_DEC_HEURISTIC VarDecHeuristic = VAR_DEC_HEURISTIC::MINISAT;
 VAL_DEC_HEURISTIC ValDecHeuristic = VAL_DEC_HEURISTIC::PHASESAVING;
 MODE mode = MODE::INCREMENTAL;
 
+auto o1 = intoption(&verbose, 0, 2, "Verbosity level");
+auto o2 = doubleoption(&timeout, 0.0, 36000.0, "Timeout in seconds");
+auto o3 = intoption((int*)&ValDecHeuristic, 0, 1, "{0: phase-saving, 1: literal-score}");
+auto o4 = intoption((int*)&mode, 0, 1, "{0: normal, 1: incremental}");
 unordered_map<string, option*> options = {
-    {"v",           new intoption(&verbose, 0, 2, "Verbosity level")},
-    {"timeout",     new doubleoption(&timeout, 0.0, 36000.0, "Timeout in seconds")},
-    {"valdh",       new intoption((int*)&ValDecHeuristic, 0, 1, "{0: phase-saving, 1: literal-score}")},
-    {"mode",        new intoption((int*)&mode, 0, 1, "{0: normal, 1: incremental}") }
+    {"v",           &o1},
+    {"timeout",     &o2},
+    {"valdh",       &o3},
+    {"mode",        &o4}
 };
 
 void parse_options(int argc, char** argv) {

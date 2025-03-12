@@ -417,7 +417,7 @@ assumes: 1) no clause should have the same literal twice. To guarantee this we r
 This is Alg. 1 from "HaifaSat: a SAT solver based on an Abstraction/Refinement model" 
 ********************************************************************************************************************/
 
-int Solver::analyze(const Clause conflicting) {
+int Solver::analyze(const Clause& conflicting) {
 	if (verbose_now()) cout << "analyze" << endl;
 	Clause	current_clause = conflicting, 
 			new_clause;
@@ -459,8 +459,11 @@ int Solver::analyze(const Clause conflicting) {
 		--resolve_num;
 		if(!resolve_num) continue; 
 		int ant = antecedent[v];		
+        Assert(0 <= ant && ant < cnf.size());
 		current_clause = cnf[ant]; 
-		current_clause.cl().erase(find(current_clause.cl().begin(), current_clause.cl().end(), u));	
+        // TODO: Should we remove u or negate_(u)?
+        auto f = find(current_clause.cl().begin(), current_clause.cl().end(), u);
+        if (f != current_clause.cl().end()) current_clause.cl().erase(f);	
 	}	while (resolve_num > 0);
 	for (clause_it it = new_clause.cl().begin(); it != new_clause.cl().end(); ++it) 
 		marked[l2v(*it)] = false;

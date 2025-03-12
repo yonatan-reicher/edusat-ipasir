@@ -163,30 +163,30 @@ struct Solver {
 	map<double, unordered_set<Var>, greater<double>>::iterator m_Score2Vars_it;
 	unordered_set<Var>::iterator m_VarsSameScore_it;
 	vector<double>	m_activity; // Var => activity
-	double			m_var_inc;	// current increment of var score (it increases over time)
-	double			m_curr_activity;
-	bool			m_should_reset_iterators;
+	double			m_var_inc = 0;	// current increment of var score (it increases over time)
+	double			m_curr_activity = 0;
+	bool			m_should_reset_iterators = 0;
 
 	unsigned int 
-		nvars,			// # vars
-		nclauses, 		// # clauses
-		nlits,			// # literals = 2*nvars				
-		qhead;			// index into trail. Used in BCP() to follow the propagation process.
+		nvars = 0,			// # vars
+		nclauses = 0, 		// # clauses
+		nlits = 0,			// # literals = 2*nvars				
+		qhead = 0;			// index into trail. Used in BCP() to follow the propagation process.
 	int					
-		num_learned, 	
-		num_decisions,
-		num_assignments,
-		num_restarts,
-		dl,				// decision level
-		max_dl,			// max dl seen so far since the last restart
-		conflicting_clause_idx, // holds the index of the current conflicting clause in cnf[]. -1 if none.				
-		restart_threshold,
-		restart_lower,
-		restart_upper;
+		num_learned = 0, 	
+		num_decisions = 0,
+		num_assignments = 0,
+		num_restarts = 0,
+		dl = 0,				// decision level
+		max_dl = 0,			// max dl seen so far since the last restart
+		conflicting_clause_idx = 0, // holds the index of the current conflicting clause in cnf[]. -1 if none.				
+		restart_threshold = 0,
+		restart_lower = 0,
+		restart_upper = 0;
 
-	Lit 		asserted_lit;
+	Lit 		asserted_lit = 0;
 
-	float restart_multiplier;
+	float restart_multiplier = 0;
 
     int (*terminate_callback)(void*) = nullptr;
     void* terminate_callback_state = nullptr;
@@ -215,7 +215,7 @@ struct Solver {
 	SolverState decide();
 	void test();
 	SolverState BCP();
-	int  analyze(const Clause);
+	int  analyze(const Clause&);
 	inline int  getVal(Var v);
 	void add_clause(Clause& c, int l, int r);
 	void add_unary_clause(Lit l);

@@ -2,6 +2,15 @@
 #include "edusat/edusat.h"
 
 Clause clause;
+bool has_been_reset = true;
+
+
+#ifndef NDEBUG
+#define DBG(expr) \
+    (std::cout << __func__ << " " << #expr "=" << (expr) << std::endl, (expr))
+#else
+#define DBG(expr) expr
+#endif
 
 
 /**
@@ -25,23 +34,36 @@ Lit literal(int lit) {
 }
 
 
+void check_reset() {
+    if (!has_been_reset) {
+        S.restart();
+        for (Lit l : S.unaries) { S.assert_lit(l); }
+        has_been_reset = true;
+    }
+}
+
+
 IPASIR_API const char * ipasir_signature () {
-    return "edusat";
+    return DBG("edusat");
 }
 
 
 IPASIR_API void * ipasir_init () {
     S = Solver();
     S.initialize();
-    return nullptr;
+    return DBG(nullptr);
 }
 
 
 IPASIR_API void ipasir_release (void * state) {
+    S = Solver();
+    clause = Clause();
 }
 
 
 IPASIR_API void ipasir_add (void * state, int lit_or_zero) {
+    DBG(lit_or_zero);
+    check_reset();
     if (lit_or_zero == 0) { // Clause finished!
         switch (clause.size()) {
             case 0:
@@ -66,21 +88,41 @@ IPASIR_API void ipasir_add (void * state, int lit_or_zero) {
 
 
 IPASIR_API void ipasir_assume (void * state, int lit) {
+    DBG(lit);
+    check_reset();
     S.assert_lit(literal(lit));
 }
 
 
+Var find_bad_var() {
+    vector<VarState> state(S.state.size(), VarState::V_UNASSIGNED);
+    for (Lit l : S.trail) {
+        auto v = Neg(l) ? VarState::V_FALSE : VarState::V_TRUE;
+        auto* cell = &state[l2v(l)];
+        if (*cell != VarState::V_UNASSIGNED && *cell != v) return l2v(l);
+        *cell = v;
+    }
+    return 0;
+}
+
+
 IPASIR_API int ipasir_solve (void * state) {
+    has_been_reset = false;
 	if (VarDecHeuristic == VAR_DEC_HEURISTIC::MINISAT) {
         S.reset_iterators();
     }
+    // Must first check for bad assumptions!
+    if (Var bad_var = find_bad_var()) {
+        S.assert_lit(v2l(bad_var));
+        return DBG(20);
+    }
     switch (S._solve()) {
         case SolverState::SAT:
-            return 10;
+            return DBG(10);
         case SolverState::UNSAT:
-            return 20;
+            return DBG(20);
         case SolverState::TIMEOUT:
-            return 0;
+            return DBG(0);
         default:
             throw std::logic_error("Invalid result!");
     }
@@ -88,12 +130,13 @@ IPASIR_API int ipasir_solve (void * state) {
 
 
 IPASIR_API int ipasir_val (void * state, int lit) {
+    DBG(lit);
     literal(lit);
     switch (S.state[abs(lit)]){
         case VarState::V_FALSE:
-            return -abs(lit);
+            return DBG(-abs(lit));
         case VarState::V_TRUE:
-            return abs(lit);
+            return DBG(abs(lit));
         default:
             return 0;
     }
@@ -101,18 +144,21 @@ IPASIR_API int ipasir_val (void * state, int lit) {
 
 
 IPASIR_API int ipasir_failed (void * state, int lit) {
+    DBG(lit);
     literal(lit);
-    return S.state[abs(lit)] != VarState::V_UNASSIGNED;
+    return DBG(S.state[abs(lit)] != VarState::V_UNASSIGNED);
 }
 
 
 IPASIR_API void ipasir_set_terminate (void * solverState, void * state, int (*terminate)(void * state)) {
+    DBG(state);
     S.terminate_callback_state = state;
     S.terminate_callback = terminate;
 }
 
 
 IPASIR_API void ipasir_set_learn (void * state, void * learnState, int max_length, void (*learn)(void * state, int * clause)) {
+    DBG(max_length);
     S.learn_callback_state = learnState;
     S.learn_callback_max_length = max_length;
     S.learn_callback = learn;
