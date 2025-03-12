@@ -474,6 +474,15 @@ int Solver::analyze(const Clause conflicting) {
 	else {
 		add_clause(new_clause, watch_lit, new_clause.size() - 1);
 	}
+    if (learn_callback && new_clause.size() <= learn_callback_max_length) {
+        // null terminated `new_clause`, with literals in cnf-like form.
+        vector<int> c;
+        c.resize(new_clause.size() + 1);
+        for (size_t i = 0; i < c.size(); i++) {
+            c[i] = i == new_clause.size() ? 0 : l2rl(new_clause.lit(i));
+        }
+        learn_callback(learn_callback_state, c.data());
+    }
 	
 
 	if (verbose_now()) {	
@@ -604,6 +613,9 @@ SolverState Solver::_solve() {
 		}
 		res = decide();
 		if (res == SolverState::SAT) return res;
+        if (terminate_callback && terminate_callback(terminate_callback_state)) {
+            return SolverState::TIMEOUT;
+        }
 	}
 }
 

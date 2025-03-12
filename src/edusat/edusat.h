@@ -231,6 +231,13 @@ struct Solver {
 	Lit 		asserted_lit;
 
 	float restart_multiplier;
+
+    int (*terminate_callback)(void*) = nullptr;
+    void* terminate_callback_state = nullptr;
+
+    void (*learn_callback)(void*, int*) = nullptr;
+    void* learn_callback_state = nullptr;
+    int learn_callback_max_length = 0;
 	
 	// access	
 	int get_learned() { return num_learned; }
