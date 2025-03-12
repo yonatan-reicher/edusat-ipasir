@@ -1,6 +1,6 @@
 #include <cassert>
 #include <iostream>
-#include "edusat/ipasir.h"
+#include "src/ipasir.h"
 
 
 typedef void* Solver;
