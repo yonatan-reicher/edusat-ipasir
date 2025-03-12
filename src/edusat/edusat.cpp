@@ -120,8 +120,7 @@ inline void Solver::reset_iterators(double where) {
 	m_should_reset_iterators = false;
 }
 
-void Solver::initialize() {	
-	
+void Solver::make_space_for_vars() {
 	state.resize(nvars + 1, VarState::V_UNASSIGNED);
 	prev_state.resize(nvars + 1, VarState::V_FALSE); // we set initial assignment with phase-saving to false. 
 	antecedent.resize(nvars + 1, -1);	
@@ -131,8 +130,13 @@ void Solver::initialize() {
 	nlits = 2 * nvars;
 	watches.resize(nlits + 1);
 	LitScore.resize(nlits + 1);
-	//initialize scores 	
+
 	m_activity.resize(nvars + 1);	
+}
+
+void Solver::initialize() {	
+	
+    make_space_for_vars();
 	m_curr_activity = 0.0f;
 	for (unsigned int v = 0; v <= nvars; ++v) {			
 		m_activity[v] = 0;		

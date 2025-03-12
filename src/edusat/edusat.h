@@ -243,6 +243,7 @@ struct Solver {
 	// misc.
 	void add_to_trail(int x) { trail.push_back(x); }
 
+	void make_space_for_vars();
 	void reset(); // initialization that is invoked initially + every restart
 	void initialize();
 	void reset_iterators(double activity_key = 0.0);	
