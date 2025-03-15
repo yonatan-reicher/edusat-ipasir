@@ -6,6 +6,7 @@
 
 
 using namespace std;
+using duration = chrono::duration<double, milli>;
 
 
 typedef void* Solver;
