@@ -138,7 +138,6 @@ void Solver::make_space_for_vars() {
 }
 
 void Solver::initialize() {	
-	
     make_space_for_vars();
 	m_curr_activity = 0.0f;
 	for (unsigned int v = 0; v <= nvars; ++v) {			
