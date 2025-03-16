@@ -435,7 +435,7 @@ int Solver::analyze(const Clause& conflicting) {
 			if (!marked[v]) {
 				marked[v] = true;
 				if (dlevel[v] == dl) ++resolve_num;
-				else { // literals from previos decision levels (roots) are entered to the learned clause.
+				else { // literals from previous decision levels (roots) are entered to the learned clause.
 					new_clause.insert(lit);
 					if (VarDecHeuristic == VAR_DEC_HEURISTIC::MINISAT) bumpVarScore(v);
 					if (ValDecHeuristic == VAL_DEC_HEURISTIC::LITSCORE) bumpLitScore(lit);
