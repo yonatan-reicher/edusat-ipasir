@@ -5,9 +5,11 @@ Clause clause;
 bool has_been_reset = true;
 
 
-#ifndef NDEBUG
-#define DBG(expr) \
-    (std::cout << __func__ << " " << #expr "=" << (expr) << std::endl, (expr))
+#ifdef EDUSAT_DEBUG
+#define DBG(expr)                                                           \
+    ( std::cout << __func__ << " " << #expr "=" << (expr) << std::endl      \
+    , (expr)                                                                \
+    )
 #else
 #define DBG(expr) expr
 #endif
@@ -51,6 +53,9 @@ IPASIR_API const char * ipasir_signature () {
 IPASIR_API void * ipasir_init () {
     S = Solver();
     S.initialize();
+#ifdef EDUSAT_VERBOSE
+    verbose = EDUSAT_VERBOSE;
+#endif
     return DBG(nullptr);
 }
 
