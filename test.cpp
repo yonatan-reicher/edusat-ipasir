@@ -75619,13 +75619,13 @@ const char* cnf = R"(
 )";
 
 
-#define TEST(test_name)                                                       \
-    try {                                                                     \
-        cout << "Test " << #test_name << "..." << endl;                       \
-        test_ ## test_name ();                                                \
-        std::cout << #test_name << " passed" << std::endl;                    \
-    } catch (const std::exception& e) {                                       \
-        std::cout << #test_name << " failed: " << e.what() << std::endl;      \
+#define TEST(test_name)                                                     \
+    try {                                                                   \
+        cout << "Test " #test_name "..." << endl;                           \
+        test_ ## test_name ();                                              \
+        std::cout << u8"✅ " #test_name " passed" << std::endl;              \
+    } catch (const std::exception& e) {                                     \
+        std::cout << u8"❌ " #test_name " failed: " << e.what() << std::endl;\
     }
 
 
