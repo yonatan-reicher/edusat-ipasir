@@ -2,6 +2,9 @@
 #include <functional>
 #include <iostream>
 #include <sstream>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include "src/ipasir.h"
 
 
@@ -75671,6 +75674,10 @@ void test_execution_time_decreases() {
 }
 
 int main() {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
+
     cout << "Starting" << endl;
 
     TEST(execution_time_decreases);
