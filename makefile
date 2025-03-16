@@ -7,7 +7,6 @@ TARGET = libipasir$(NAME).a
 
 CC = g++
 EXTRA_DEBUG_CFLAGS = -std=c++17 -g -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -O0
-DEBUG_CFLAGS = -std=c++17 -g -O0
 CFLAGS = -std=c++17 -DNDEBUG -O3
 CFLAGS = $(DEBUG_CFLAGS)
 
@@ -34,7 +33,8 @@ build:
 	rm -f *.o
 
 test:
-	$(CC) $(DEBUG_CFLAGS) test.cpp $(SRC_CPP) -o test.out
+	$(CC) -O3 -std=c++17 -g -D NDEBUG -D EDUSAT_VERBOSE=2           		\
+		test.cpp $(SRC_CPP) -o test.out
 	./test.out
 
 .FORCE:
