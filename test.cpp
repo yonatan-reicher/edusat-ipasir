@@ -15,14 +15,42 @@ using duration = chrono::duration<double, milli>;
 typedef void* Solver;
 
 
-#define TEST(test_name)                                                     \
-    try {                                                                   \
-        cout << "Test " #test_name "..." << endl;                           \
-        test_ ## test_name ();                                              \
-        std::cout << u8"✅ " #test_name " passed" << std::endl;              \
-    } catch (const std::exception& e) {                                     \
-        std::cout << u8"❌ " #test_name " failed: " << e.what() << std::endl;\
+
+vector<const char*> summary;
+
+
+#define TEST(test_name) \
+    run_test( \
+        #test_name, \
+        test_##test_name, \
+        "Running test " #test_name "...", \
+        u8"✅ " #test_name " passed", \
+        u8"❌ " #test_name " failed" \
+    )
+void run_test(
+    const char* test_name,
+    void (*test_function)(),
+    const char* intro,
+    const char* success,
+    const char* failure
+) {
+    try {                                                                     
+        cout << intro << endl;
+        test_function();
+        std::cout << success << std::endl;               
+        summary.push_back(success);
+    } catch (const std::exception& e) {                                       
+        std::cout << failure << ": " << e.what() << std::endl; 
+        summary.push_back(failure);                               
     }
+}
+
+
+#define TEST_SUMMARY() print_test_summary()
+void print_test_summary() {
+    cout << "Summary:" << endl;
+    for (const auto &line : summary) cout << line << endl;
+}
 
 
 #define ASSERT(condition, msg)                                              \
@@ -268,6 +296,7 @@ void test_assume_dissappears() {
 
 int main() {
 #ifdef _WIN32
+    // We use utf8 characters
     SetConsoleOutputCP(CP_UTF8);
 #endif
 
@@ -279,6 +308,9 @@ int main() {
     TEST(assume_dissappears);
 
     cout << "End" << endl;
+    cout  << endl;
+
+    TEST_SUMMARY();
 
     return 0;
 }
