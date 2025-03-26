@@ -39,6 +39,7 @@ Lit literal(int lit) {
 void check_reset() {
     if (!has_been_reset) {
         S.restart();
+        S.unassert_temporaries();
         for (Lit l : S.unaries) { S.assert_lit(l); }
         has_been_reset = true;
     }
@@ -95,7 +96,8 @@ IPASIR_API void ipasir_add (void * state, int lit_or_zero) {
 IPASIR_API void ipasir_assume (void * state, int lit) {
     DBG(lit);
     check_reset();
-    S.assert_lit(literal(lit));
+    // Temporary assertions are un-assumed when resetting the model.
+    S.temporary_assert(literal(lit));
 }
 
 

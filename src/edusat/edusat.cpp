@@ -155,6 +155,46 @@ void Solver::assert_lit(Lit l) {
 	if (verbose_now()) cout << l2rl(l) <<  " @ " << dl << endl;
 }
 
+
+void Solver::temporary_assert(Lit l) {
+    indices_of_temporary_assertions.insert(trail.size());
+	trail.push_back(l);
+	int var = l2v(l);
+	if (Neg(l)) prev_state[var] = state[var] = VarState::V_FALSE; else prev_state[var] = state[var] = VarState::V_TRUE;
+	dlevel[var] = dl;
+	++num_assignments;
+	if (verbose_now()) cout << l2rl(l) <<  " @ " << dl << endl;
+}
+
+
+vector<int> vector_without_indices(const vector<int>& v, const unordered_set<int>& indices) {
+    vector<int> result;
+    for (int i = 0; i < v.size(); ++i) {
+        if (indices.find(i) == indices.end()) {
+            result.push_back(v[i]);
+        }
+    }
+    return result;
+}
+
+
+void Solver::unassert_temporaries() {
+    for (auto i : indices_of_temporary_assertions) {
+        Lit l = trail[i];
+        int var = l2v(l);
+        // Revert the state vector's cell to it's default state.
+        // prev_state[var] = VarState::V_FALSE;
+        state[var] = VarState::V_UNASSIGNED;
+        dlevel[var] = 0; // TODO: Is this correct? Who knows! (actual todo: what does dlevel hold for variables that are assigned?)
+        --num_assignments;
+    }
+    trail = vector_without_indices(trail, indices_of_temporary_assertions);
+
+    // .clear() is not enough - we don't want to keep the memory allocated.
+    indices_of_temporary_assertions = unordered_set<int>();
+}
+
+
 void Solver::m_rescaleScores(double& new_score) {
 	if (verbose_now()) cout << "Rescale" << endl;
 	new_score /= Rescale_threshold;

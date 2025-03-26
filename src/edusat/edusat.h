@@ -3,7 +3,6 @@
 #include <iterator>
 #include <vector>
 #include <unordered_set>
-#include <unordered_map>
 #include <map>
 #include <string>
 #include <fstream>
@@ -194,6 +193,8 @@ struct Solver {
     void (*learn_callback)(void*, int*) = nullptr;
     void* learn_callback_state = nullptr;
     int learn_callback_max_length = 0;
+
+    std::unordered_set<int> indices_of_temporary_assertions;
 	
 	// access	
 	int get_learned() { return num_learned; }
@@ -220,6 +221,8 @@ struct Solver {
 	void add_clause(Clause& c, int l, int r);
 	void add_unary_clause(Lit l);
 	void assert_lit(Lit l);	
+	void temporary_assert(Lit l);	
+    void unassert_temporaries();
 	void m_rescaleScores(double& new_score);
 	inline void backtrack(int k);
 	void restart();
