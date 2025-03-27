@@ -105,7 +105,7 @@ void test_execution_time_decreases() {
 
 
 vector<int> solver_get_assignment(Solver s, int max_var) {
-    vector<int> ret(max_var);
+    vector<int> ret(max_var + 1);
     for (int i = 1; i <= max_var; i++) {
         ret[i] = ipasir_val(s, i);
     }
@@ -116,7 +116,7 @@ vector<int> solver_get_assignment(Solver s, int max_var) {
 string pretty_print_assignment(const vector<int>& a) {
     string ret;
     bool did_first_print = false;
-    for (int i = 1; i <= a.size(); i++) {
+    for (int i = 1; i < a.size(); i++) {
         int val = a[i];
         ASSERT(val == 0 || abs(val) == i, "Assignment is invalid");
         string s = to_string(val);
