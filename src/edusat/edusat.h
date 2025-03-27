@@ -158,6 +158,7 @@ struct Solver {
 	vector<int> conflicts_at_dl; // decision level => # of conflicts under it. Used for local restarts. 
 
 	// Used by VAR_DH_MINISAT:	
+    vector<bool> m_HasVarBeenPutInScore2Vars;
 	map<double, unordered_set<Var>, greater<double>> m_Score2Vars; // 'greater' forces an order from large to small of the keys
 	map<double, unordered_set<Var>, greater<double>>::iterator m_Score2Vars_it;
 	unordered_set<Var>::iterator m_VarsSameScore_it;

@@ -135,6 +135,13 @@ void Solver::make_space_for_vars() {
 	LitScore.resize(nlits + 1);
 
 	m_activity.resize(nvars + 1);	
+
+    m_HasVarBeenPutInScore2Vars.resize(nvars + 1, false);
+    for (Var v = 1; v <= nvars; ++v) {
+        if (m_HasVarBeenPutInScore2Vars[v]) continue;
+        // This will put it in the map!
+        bumpVarScore(v);
+    }
 }
 
 void Solver::initialize() {	
@@ -234,8 +241,10 @@ void Solver::bumpVarScore(int var_idx) {
 
 	if (m_Score2Vars.find(new_score) != m_Score2Vars.end())
 		m_Score2Vars[new_score].insert(var_idx);
-	else
+	else {
 		m_Score2Vars[new_score] = unordered_set<int>({ var_idx });
+        m_HasVarBeenPutInScore2Vars[var_idx] = true;
+    }
 }
 
 void Solver::bumpLitScore(int lit_idx) {
