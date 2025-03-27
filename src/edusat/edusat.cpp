@@ -666,6 +666,9 @@ SolverState Solver::_solve() {
 			else break;
 		}
 		res = decide();
+#ifdef EDUSAT_DEBUG
+        if (res == SolverState::SAT) S.validate_assignment();
+#endif
 		if (res == SolverState::SAT) return res;
         if (terminate_callback && terminate_callback(terminate_callback_state)) {
             return SolverState::TIMEOUT;
