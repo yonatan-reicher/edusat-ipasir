@@ -74,7 +74,7 @@ inline void AssertCheck(bool cond, string func_name, int line, string msg = "") 
 }
 
 
-inline bool match(ifstream& in, char* str) {
+inline bool match(ifstream& in, const char* str) {
     for (; *str != '\0'; ++str)
         if (*str != in.get())
             return false;
